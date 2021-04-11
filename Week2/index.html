@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hello World</title>
+	<meta charset="utf-8" />
+
+	<!-- style sheets -->
+	<link rel="stylesheet" href="css/style.css">
+
+    <!-- leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+</head>
+
+<body>
+
+	<div class="header">
+		Homestays in the Northern Hemisphere
+		
+	</div>
+	<div class="sidebar">
+		Towns Where Kate Stayed with Host Families
+	</div>
+	<div class="content">
+		<div id="map"></div>
+	</div>
+
+    <script>
+        var map = L.map('map').setView([52.50790,-8.71704], 3);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+				
+		
+		let data = [
+				{
+					'title':'Croom, County Limerick, Ireland',
+					'description': 'Summer camp where I went as a child and worked as a teen',
+					'lat': 52.50790,
+					'lon': -8.71704,
+					'image': IMG_1167.JPG
+				},
+				{
+					'title':'7ème Arrondissement, Paris, France',
+					'description': 'I stayed chez Les Gabriels the summers after my freshman and sophomore years of high school',
+					'lat': 48.85842, 
+					'lon': 2.32308,
+					'image': IMG_0636.JPG
+				},
+				{
+					'title':'Marquise, Pas-de-Calais, France',
+					'description': 'I taught at an elementary/middle school here and stayed chez Les Lefebvres',
+					'lat': 50.81258, 
+					'lon': 1.69955,
+					'image': IMG_0242.JPG
+				},
+				{
+					'title':'Villa Díaz Ordaz, Oaxaca, México',
+					'description': 'The yearly Guelaguetza festival took place when I stayed here',
+					'lat': 17.05405,
+					'lon': -96.38129,
+					'image': IMG_3278.JPG
+				},
+				{
+					'title':'Viñales, Pinar del Rio, Cuba',
+					'description':'This stay involved me attempting to understand and speak Spanish despite not having studied it since 5th grade',
+					'lat': 22.61900, 
+					'lon': -83.70700,
+					'image': IMG_5538.JPG
+				}
+		]	
+		
+		// loop through data
+		data.forEach(function(item){
+			console.log(item)
+			var marker = L.marker([item.lat, item.lon]).addTo(map)
+                .bindPopup('<b>'+item.title+'</b><br> '+item.description+ '<br>' + item.image)
+                .openPopup();
+		});
+
+		
+    </script>
+
+</body>
+</html>
