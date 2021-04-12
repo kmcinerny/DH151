@@ -23,18 +23,18 @@ body {
     background-color: rgb(44, 105, 82);
 	font-size: xx-large;
     font-weight: 700;
-    color: antiquewhite;
+    color: linen;
 }
 .sidebar {
 	grid-area: sidebar;
 	padding:10px;
     background-color: rgb(63, 80, 69);
-	font-weight: 700;
-	font-size: large;
-    color: antiquewhite;
+	font-weight: 300;
+	font-size: medium;
+    color: linen;
 }
 .content {
 	grid-area: content;
-	color: antiquewhite;
+	color: linen;
 }
 

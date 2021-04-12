@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Hello World</title>
+	<title>Homestays in the Northern Hemisphere</title>
 	<meta charset="utf-8" />
 
 	<!-- style sheets -->
@@ -20,14 +20,27 @@
 		
 	</div>
 	<div class="sidebar">
-		Towns Where Kate Stayed with Host Families
+		<h3>Towns where Kate has stayed with host families</h3>
+
+		<p>Through high school and family friendships I have had the privilege of visiting various countries. The ability to stay with host families has made these particular trips so unique and favorites in my list.</p>
+		
+		<p> These places include:</p>
+		<ul>
+			<li>Viñales, Pinar del Rio, Cuba</li>
+			<li>7ème Arrondissement, Paris, France</li>
+			<li>Marquise, Pas-de-Calais, France</li>
+			<li>Croom, County Limerick, Ireland</li>
+			<li>Villa Díaz Ordaz, Oaxaca, México</li>
+		</ul>
+
+		<p>Click on each marker for a glimpse into these visits!</p>
 	</div>
 	<div class="content">
 		<div id="map"></div>
 	</div>
 
     <script>
-        var map = L.map('map').setView([52.50790,-8.71704], 3);
+        var map = L.map('map').setView([37.52879,-43.45779], 3);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -37,51 +50,58 @@
 		let data = [
 				{
 					'title':'Croom, County Limerick, Ireland',
-					'description': 'Summer camp where I went as a child and worked as a teen',
+					'description': 'This picture is of Joe Flinn Free Range Kids summer camp, where I went as a child and worked as a teen.',
 					'lat': 52.50790,
 					'lon': -8.71704,
-					'image': IMG_1167.JPG
+					'image': '<img src= "images/IMG_1167.JPG" class = "image" width ="250px">',
 				},
 				{
 					'title':'7ème Arrondissement, Paris, France',
-					'description': 'I stayed chez Les Gabriels the summers after my freshman and sophomore years of high school',
+					'description': 'I stayed chez Les Gabriels the summers after my freshman and sophomore years of high school.',
 					'lat': 48.85842, 
 					'lon': 2.32308,
-					'image': IMG_0636.JPG
+					'image': '<img src= "images/IMG_0636.JPG" class = "image" width ="150px">'
 				},
 				{
 					'title':'Marquise, Pas-de-Calais, France',
-					'description': 'I taught at an elementary/middle school here and stayed chez Les Lefebvres',
+					'description': 'I taught at an elementary/middle school pictured here and stayed chez Les Lefebvres.',
 					'lat': 50.81258, 
 					'lon': 1.69955,
-					'image': IMG_0242.JPG
+					'image': '<img src= "images/IMG_0242.JPG" class = "image" width ="250px">'
 				},
 				{
 					'title':'Villa Díaz Ordaz, Oaxaca, México',
-					'description': 'The yearly Guelaguetza festival took place when I stayed here',
+					'description': 'The yearly Guelaguetza festival took place the week I stayed here with family friends.',
 					'lat': 17.05405,
 					'lon': -96.38129,
-					'image': IMG_3278.JPG
+					'image': '<img src= "images/IMG_3278.JPG" class = "image" width ="250px">'
 				},
 				{
 					'title':'Viñales, Pinar del Rio, Cuba',
-					'description':'This stay involved me attempting to understand and speak Spanish despite not having studied it since 5th grade',
+					'description':'I stayed overnight with a nice host family, who were patient with me as I attempted to understand and speak Spanish, despite mostly having studied French.',
 					'lat': 22.61900, 
 					'lon': -83.70700,
-					'image': IMG_5538.JPG
+					'image': '<img src= "images/IMG_5538.JPG" class = "image" width ="250px">'
 				}
 		]	
 		
 		// loop through data
 		data.forEach(function(item){
-			console.log(item)
-			var marker = L.marker([item.lat, item.lon]).addTo(map)
-                .bindPopup('<b>'+item.title+'</b><br> '+item.description+ '<br>' + item.image)
-                .openPopup();
+			L.marker([item.lat, item.lon], {clickable:true, }).addTo(map)
+                .bindPopup('<center><b>'+item.title+ '</b><br>'+item.description+ '<br>'+ item.image)
+                .openPopup()
+				.on('click',zoomIn);
+
 		});
 
-		
-    </script>
+		// zoom in when clicking popup
+		function zoomIn() {
+			this.bindPopup(this.title).openPopup();
+			map.setView([this.getLatLng().lat, this.getLatLng().lng],5);
+		}
+    
+	
+	</script>
 
 </body>
 </html>
