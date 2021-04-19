@@ -51,8 +51,23 @@ body {
 
 .sidebar-item:hover {
 	background:rgb(43, 54, 47);
-	}
+}
 
 a {
 	color: linen;
+	text-decoration: none
 }	
+a:visited {
+	color:linen;
+	text-decoration: none
+}
+
+a:hover {
+	color:linen;
+	text-decoration: underline;
+}
+  
+a:active {
+	color:linen;
+	text-decoration: underline;
+}
