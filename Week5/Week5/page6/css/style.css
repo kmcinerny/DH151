@@ -1,0 +1,79 @@
+body,html {
+	margin:0;
+	height:100%;
+	width:100%;
+}
+
+#map {
+	height: 100%;
+}
+
+body {
+	display: grid;
+	grid-template-rows: 80px 1fr;
+	grid-template-columns: 600px 1fr;
+	grid-template-areas: 
+	"header header"
+	"sidebar content"
+	"footer footer";
+}
+
+.header {
+	grid-area: header;
+	padding:10px;
+	background-color: rgb(41, 45, 59);
+	color: white;
+	font-size: 2em;
+}
+
+.sidebar {
+	color: white;
+	grid-area: sidebar;
+	padding:10px;
+	background-color: rgb(90, 81, 71);
+	overflow: auto;
+}
+
+.content {
+	grid-area: content;
+}
+
+.footer {
+	grid-area: footer;
+	padding:10px;
+	background-color: rgb(175, 175, 175);
+}
+
+
+.sidebar-item {
+	padding: 10px;
+	background: rgb(116, 118, 128);
+	border: 1px solid rgb(201, 142, 33);
+	margin: 5px;
+	color: linen;
+	cursor: pointer;
+
+}
+
+.sidebar-item:hover {
+	background:rgb(41, 45, 59);
+}
+
+a {
+	color: linen;
+	text-decoration: none
+}	
+a:visited {
+	color:linen;
+	text-decoration: none
+}
+
+a:hover {
+	color:linen;
+	text-decoration: underline;
+}
+  
+a:active {
+	color:linen;
+	text-decoration: underline;
+}
