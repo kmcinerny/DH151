@@ -6,7 +6,7 @@ let zl = 8;
 let path = '';
 
 // put this in global variables
-let geojsonPath= 'data/progsinzips.geo.json';
+let geojsonPath= 'data/zipsinfo.geo.json';
 let geojson_data;
 let geojson_layer;
 
@@ -32,7 +32,7 @@ $( document ).ready(function() {
 function createMap(lat,lon,zl){
 	map = L.map('map').setView([lat,lon], zl);
 	L.tileLayer.provider('Jawg', {
-		variant: 'jawg-dark',
+		variant: 'jawg-light',
 		accessToken: 'fLAohCU6p7WMdLTK7u03VkhqqLcrHeGIvdySTS5AsDRfN49NEMTwPPiDd0TWTjGP'
 	}).addTo(map)	
 }
@@ -47,12 +47,12 @@ function getGeoJSON(){
 		geojson_data = data;
 
 		// call the map function
-		mapGeoJSON('NUMPOINTS', 7) //add a field to be used
+		mapGeoJSON('pctwhite', 8, 'PuBuGn', 'interval') //add a field to be used
 	})
 }
 
 // function to map a geojson file and style it with choropleth
-function mapGeoJSON(field, num_class){
+function mapGeoJSON(field, num_class, color, scheme){
 
 	// clear layers in case it has been mapped already
 	if (geojson_layer){
@@ -73,8 +73,8 @@ function mapGeoJSON(field, num_class){
 	// set up the "brew" options
 	brew.setSeries(values);
 	brew.setNumClasses(num_class);
-	brew.setColorCode('PuBuGn');
-	brew.classify('interval');
+	brew.setColorCode(color);
+	brew.classify(scheme);
 
 	// create the layer and add to map
 	geojson_layer = L.geoJson(geojson_data, {
@@ -181,7 +181,7 @@ function createInfoPanel(){
 	info_panel.update = function (properties) {
 		// if feature is highlighted
 		if(properties){
-			this._div.innerHTML = `<b>${properties.zipcode}</b><br>${fieldtomap}: ${properties[fieldtomap]}`;
+			this._div.innerHTML = `<b>Zip Code ${properties.zipcode}</b><br>${fieldtomap}: ${properties[fieldtomap]}`;
 		}
 		// if feature is not highlighted
 		else
