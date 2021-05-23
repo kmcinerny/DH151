@@ -47,9 +47,26 @@ function getGeoJSON(){
 		geojson_data = data;
 
 		// call the map function
-		mapGeoJSON('pctwhite', 8, 'PuBuGn', 'interval') //add a field to be used
+		mapGeoJSON('programs', 8, 'PuBuGn', 'equal_interval') //add a field to be used
+	
+		//call create slider function
+		createSlider();
+
+	
 	})
 }
+function createSlider(){
+	$(".js-range-slider").ionRangeSlider({
+        type: "double",
+        min: 0,
+        max: 8,
+        from: 200,
+        to: 500,
+        grid: true
+    });
+    
+}
+
 
 // function to map a geojson file and style it with choropleth
 function mapGeoJSON(field, num_class, color, scheme){
