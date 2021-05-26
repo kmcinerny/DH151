@@ -16,7 +16,7 @@ let legend = L.control({position: 'bottomright'});
 let info_panel = L.control();
 let csvdata;
 let mapSlider = $(".js-range-slider").data("ionRangeSlider"); //Save slider instance to var. Should I do this here or down below the function?
-
+let topPrograms;
 	
 
 // initialize
@@ -109,27 +109,47 @@ function getGeoJSON(){
 }
 
 function createSlider(){
-$(".js-range-slider").ionRangeSlider({
-	type: "single",
-	min: 0,
-	max: 8,
-	from: 1, //need to replace this with some type of "map threshold"?
-	grid: true,
-	keyboard: true,
+	$(".js-range-slider").ionRangeSlider({
+		type: "single",
+		min: 0,
+		max: 8,
+		from: 1, //need to replace this with some type of "map threshold"?
+		grid: true,
+		keyboard: true,
 
-	onStart: function (data){
-		console.log(data.input);
-		console.log(data.slider);
-	
-	},
+		onStart: function (data){
+			console.log(data.input);
+			console.log(data.slider);
+		
+		},
 
-	onChange: function (data){
-		//then input a function related to map threshold here?
-		console.log(data.from);
-	}
-});
+		onChange: function (data){
+			//then input a function related to map threshold here?
+			console.log(data.from);
+
+			mapPrograms(data.from)
+		}
+	});
 
 }
+
+function mapPrograms(num){
+	console.log('mapping zip codes with more than '+num)
+
+	if(topPrograms){
+		topPrograms.clearLayers()
+	}
+
+	topPrograms= L.geoJSON(geojson_data, {
+		style: {
+			color: '#ed5565',
+			weight: 2,
+			fill: false
+		},
+		filter:function(item){if(item.properties.programs>num)return true}
+	}).addTo(map)
+}
+
 
 // function to map a geojson file and style it with choropleth
 function mapGeoJSON(field, num_class, color, scheme){
