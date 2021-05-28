@@ -62,6 +62,9 @@ function mapCSV(csvdata){
 		.on('mouseover',function(){
 			this.bindPopup(`<b><p align= "center">${item.name1}</b>
 			<br>${item.street1},<br>${item.city} ${item.zip}<br>${item.website}</p>`).openPopup()
+		});
+		marker.on('mouseout', function(){
+			this.closePopup();
 		})
 
 		// add marker to featuregroup
@@ -134,7 +137,7 @@ function createSlider(){
 }
 
 function mapPrograms(num){
-	console.log('mapping zip codes with more than '+num)
+	console.log('mapping zip codes with '+num ,'or more programs')
 
 	if(topPrograms){
 		topPrograms.clearLayers()
@@ -146,7 +149,7 @@ function mapPrograms(num){
 			weight: 2,
 			fill: false
 		},
-		filter:function(item){if(item.properties.programs>num)return true}
+		filter:function(item){if(item.properties.programs>=num)return true}
 	}).addTo(map)
 }
 
