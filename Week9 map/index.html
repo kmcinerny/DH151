@@ -23,7 +23,10 @@
 	<link rel="stylesheet" href="js/rangeSlider/css/ion.rangeSlider.css">
 	<link rel="stylesheet" href="js/rangeSlider/css/ion.rangeSlider.skinFlat.css">	
 
-
+	<!-- Load Esri Leaflet from CDN -->
+	<script src="https://unpkg.com/esri-leaflet@3.0.2/dist/esri-leaflet.js"
+		integrity="sha512-myckXhaJsP7Q7MZva03Tfme/MSF5a6HC2xryjAM4FxPLHGqlh5VALCbywHnzs2uPoF/4G/QVXyYDDSkp5nPfig=="
+		crossorigin=""></script>
 </head>
 <body>
 	<div class="header">
@@ -36,9 +39,17 @@
 			<input type="text" class="js-range-slider" name="mapSlider" value="" />
 	</div>
 
-	<div class="dashboard"></div>
+	<div class="dashboard">
+		<div class="button" onclick="mapGeoJSON('programs', 8, 'PuBuGn', 'equal_interval')"> Number of Facilities</div>
+		<div class="button" onclick="mapGeoJSON('pctblack', 8, 'PuBuGn', 'equal_interval')"> Percent Black</div>
+		<div class="button" onclick="mapGeoJSON('pctnative', 8, 'PuBuGn', 'equal_interval')"> Percent Indigenous</div>
+		<div class="button" onclick="mapGeoJSON('pctlatinx', 8, 'PuBuGn', 'equal_interval')"> Percent Latinx</div>
+		<div class="button" onclick="mapGeoJSON('pctasian', 8, 'PuBuGn', 'equal_interval')"> Percent Asian</div>
+		<div class="button" onclick="mapGeoJSON('pctwhite', 8, 'PuBuGn', 'equal_interval')"> Percent White</div>
+	</div>
 
 	<div class="footer">
+	
 	</div>
 	
 	<script src="js/map.js"></script>

@@ -1,9 +1,9 @@
 
 // Global variables
 let map;
-let lat = 0;
-let lon = 0;
-let zl = 3; //zoom level
+let lat = 34.05078 ;
+let lon = -118.24145;
+let zl = 10; //zoom level
 let path1 = "data/mental.csv";
 let path = '';
 let markers = L.featureGroup();
@@ -17,14 +17,17 @@ let info_panel = L.control();
 let csvdata;
 let mapSlider = $(".js-range-slider").data("ionRangeSlider"); //Save slider instance to var. Should I do this here or down below the function?
 let topPrograms;
+let positron;
+let positronLabels;
 // layers to toggle between
 var overlays= {
-	"Program Locations" : markers,
+	"Program Locations" : markers
 };
-var baseLayers= {
+//var baseLayers= {
 	// add layer for each different choropleth variable, making sure they can't layer on top of each other
-	"Choropleth": geojson_layer
-};
+	//"Basemap": positron,
+	//"Labels" : positronLabels
+//};
 	
 
 // initialize
@@ -57,13 +60,13 @@ function mapCSV(csvdata){
     let circleOptions = {
         radius: 1.5,
         weight : 0.5,
-        color : '#046582',
+        color : 'black',
         fillColor: '#046582',
         fillOpacity: 1,
     }
 
 	// add layer control box
-	L.control.layers(baseLayers,overlays).addTo(map)
+	L.control.layers(null,overlays).addTo(map)
 	
 	// loop through each entry
 	csvdata.data.forEach(function(item,index){
@@ -206,8 +209,7 @@ function mapGeoJSON(field, num_class, color, scheme){
 		onEachFeature: onEachFeature // actions on each feature
 	}).addTo(map);
 
-	// fit to bounds
-	map.fitBounds(geojson_layer.getBounds())
+	// bring geojson layer to back
 	geojson_layer.bringToBack()
 
 	//create legend
@@ -268,10 +270,7 @@ function createInfoPanel(){
 		// if feature is highlighted
 		if(properties){
 
-			this._div.innerHTML ='The number of facilities in zip code <br>'  + 
-			`<b>${properties.zipcode}</b> ` 
-			+ ' are: ' 
-			+ `<b> ${properties[fieldtomap]}</b>` 
+			this._div.innerHTML =`<b>Zip Code ${properties.zipcode}</b><br>${fieldtomap}: ${properties[fieldtomap]}`;
 			
 			
 			;
@@ -328,11 +327,13 @@ function createLegend(){
 function createMap(lat,lon,zl){
 	map = L.map('map').setView([lat,lon], zl);
 
-	L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+	var positron= L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
 		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
 		subdomains: 'abcd',
 		maxZoom: 19
 	}).addTo(map)	
+
+	
 
 	//L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
 		//attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -347,5 +348,15 @@ function createMap(lat,lon,zl){
 		//maxZoom: 20,
 		//ext: 'png'
 	//}).addTo(map)	
+
+	// put labels on top of geoJSON map
+	map.createPane('labels').style.zIndex = 650;
+	//make sure those labels don't capture clicks and touches
+	map.getPane('labels').style.pointerEvents = 'none';
+		
+	let positronLabels = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
+			// attribution: cartodbAttribution,
+		pane: 'labels'
+	}).addTo(map);
 
 }
