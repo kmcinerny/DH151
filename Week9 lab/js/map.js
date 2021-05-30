@@ -20,7 +20,7 @@ $( document ).ready(function() {
 	getGeoJSON();
 });
 
-// create the map√
+// create the map
 function createMap(lat,lon,zl){
 	map = L.map('map').setView([lat,lon], zl);
 
@@ -84,8 +84,8 @@ function mapGeoJSON(field,num_classes,color,scheme){
 	// create the infopanel
 	createInfoPanel();
 
-    //call function to create table
-    createTable();
+	// create table
+	createTable();
 }
 
 function getStyle(feature){
@@ -156,7 +156,7 @@ function onEachFeature(feature, layer) {
 	});
 }
 
-// on mouse over, highlight the feature and it updates all these things like info panel and now also dashboard
+// on mouse over, highlight the feature
 function highlightFeature(e) {
 	var layer = e.target;
 
@@ -172,7 +172,20 @@ function highlightFeature(e) {
 	}
 
 	info_panel.update(layer.feature.properties);
-    createDashboard(layer.feature.properties)
+
+	createDashboard(layer.feature.properties);
+
+}
+
+// on mouse out, reset the style, otherwise, it will remain highlighted
+function resetHighlight(e) {
+	geojson_layer.resetStyle(e.target);
+	info_panel.update() // resets infopanel
+}
+
+// on mouse click on a feature, zoom in to it
+function zoomToFeature(e) {
+	map.fitBounds(e.target.getBounds());
 }
 
 function createDashboard(properties){
@@ -180,38 +193,40 @@ function createDashboard(properties){
 	// clear dashboard
 	$('.dashboard').empty();
 
-	console.log(properties) //console log the data being fed into chart
+	console.log(properties)
 
 	// chart title
-	let title = 'Household income in ' +properties['Qualifying Name'];
+	let title = 'Household Income in ' + properties['Qualifying Name'];
 
 	// data values
 	let data = [
-
-        properties['% Households: Less than $25,000'],
-        properties['% Households: $25,000 to $49,999'],
-        properties['% Households: $50,000 to $74,999'], 
-        properties['% Households: $75,000 to $99,999'],
-        properties['% Households: $100,000 or More'],
-
-    ];
-    
-
+		properties['% Households: Less than $25,000'],
+		properties['% Households: $25,000 to $49,999'],
+		properties['% Households: $50,000 to $74,999'],
+		properties['% Households: $75,000 to $99,999'],
+		properties['% Households: $100,000 or More'],
+	]
+	
 	// data fields
-	let fields = ['New York Yankees','LA Lakers','Boston Celtics','Manchester United','x'];
+	let fields = [
+		'% Less than $25,000',
+		'% $25,000 to $49,999',
+		'% $50,000 to $74,999',
+		'% $75,000 to $99,999',
+		'% $100,000 or More',
+	]
 
-	// set chart options
-	let options = {
+	// chart options
+	var options = {
 		chart: {
-			type: 'pie',
-			height: 400,
-            width: 400,
+			type: 'bar',
+			height: 300,
 			animations: {
 				enabled: false,
 			}
 		},
 		title: {
-			text: title,
+			text: title
 		},
 		plotOptions: {
 			bar: {
@@ -228,23 +243,41 @@ function createDashboard(properties){
 		}
 	}
 	
-	// create the chart
-	let chart = new ApexCharts(document.querySelector('.dashboard'), options)
-	chart.render()
-}
+	var options2 = {
+		chart: {
+			type: 'pie',
+			height: 300,
+			width: '100%',			
+			animations: {
+				enabled: false,
+			}
+		},
+		title: {
+			text: 'Household Income in ' + properties['Qualifying Name'],
+		},
+		series: data,
+		labels: fields,
+		legend: {
+			position: 'right',
+			offsetY: 0,
+			height: 230,
+		  }
+	};
 
+	var chart = new ApexCharts(document.querySelector('.dashboard'), options)
+	chart.render()
+  
+}
 
 function createTable(){
 
-	// empty array for our data
 	let datafortable = [];
 
-	// loop through the data and add the properties object to the array
 	geojson_data.features.forEach(function(item){
 		datafortable.push(item.properties)
 	})
+	console.log(datafortable)
 
-	// array to define the fields: each object is a column
 	let fields = [
 		{ name: "Qualifying Name", type: "text"},
 		{ name: '% Households: Less than $25,000', type: 'number'},
@@ -252,7 +285,6 @@ function createTable(){
 		{ name: 'Median Household Income (In 2019 Inflation Adjusted Dollars)', type: 'number'},
 	]
  
-	// create the table in our footer
 	$(".footer").jsGrid({
 		width: "100%",
 		height: "400px",
@@ -268,8 +300,8 @@ function createTable(){
 		data: datafortable,
 		fields: fields,
 		rowClick: function(args) { 
-			console.log(args);
-            zoomTo(args.item.GEO_ID)
+			console.log(args)
+			zoomTo(args.item.GEO_ID)
 		},
 	});
 }
@@ -280,17 +312,4 @@ function zoomTo(geoid){
 
 	map.fitBounds(zoom2poly[0].getBounds())
 
-}
-
-
-
-// on mouse out, reset the style, otherwise, it will remain highlighted
-function resetHighlight(e) {
-	geojson_layer.resetStyle(e.target);
-	info_panel.update() // resets infopanel
-}
-
-// on mouse click on a feature, zoom in to it
-function zoomToFeature(e) {
-	map.fitBounds(e.target.getBounds());
 }
