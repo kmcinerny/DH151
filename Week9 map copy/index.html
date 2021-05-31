@@ -36,6 +36,9 @@
 	<link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css" />
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
 	
+	 <!-- ... -->
+	 <script src="js/selectivity-jquery.min.js"></script>
+	 <script src="js/selectivity.js"></script>
 
 </head>
 <body>
@@ -48,19 +51,20 @@
 		<input type="text" class="js-range-slider" name="mapSlider" value="" />
 	</div>
 
-	<div class="slider-container"></div>
+	<div class="slider-container">
+		<br>
+		<br>
+		<br>
+		<br>
+		<center>Slide for minimum number of facilities in each zip code</center>
+	</div>
 
 	<div class="dashboard">
 		
 	</div>
 
 	<div class="sidebar">
-		<div class="button" onclick="mapGeoJSON('programs', 8, 'PuBuGn', 'equal_interval')"> Number of Facilities</div>
-		<div class="button" onclick="mapGeoJSON('pctblack', 8, 'PuBuGn', 'equal_interval')"> Percent Black</div>
-		<div class="button" onclick="mapGeoJSON('pctnative', 8, 'PuBuGn', 'equal_interval')"> Percent Indigenous</div>
-		<div class="button" onclick="mapGeoJSON('pctlatinx', 8, 'PuBuGn', 'equal_interval')"> Percent Latinx</div>
-		<div class="button" onclick="mapGeoJSON('pctasian', 8, 'PuBuGn', 'equal_interval')"> Percent Asian</div>
-		<div class="button" onclick="mapGeoJSON('pctwhite', 8, 'PuBuGn', 'equal_interval')"> Percent White</div>
+		<center><b>Map variables by zip</b></center>
 	</div>
 	
 	<script src="js/map.js"></script>

@@ -6,29 +6,31 @@ let lon = -118.24145;
 let zl = 10; //zoom level
 let path1 = "data/mental.csv";
 let path = '';
+let csvdata;
 let markers = L.featureGroup();
 let geojsonPath= 'data/zipsinfo.geo.json';
 let geojson_data= L.tileLayer;
 let geojson_layer;
+
+// map args
+let field= 'total_pop'; //is this the default field?
+let num_classes= 8;
+let color= 'PuBuGn';
+let scheme= 'equal_interval';
+
 let brew = new classyBrew();
-let fieldtomap;
-let field;
+/*let fieldtomap; keep?*/
 let legend = L.control({position: 'bottomright'});
 let info_panel = L.control();
-let csvdata;
-let mapSlider = $(".js-range-slider").data("ionRangeSlider"); //Save slider instance to var. Should I do this here or down below the function?
+
+//slider variables
+let mapSlider = $(".js-range-slider").data("ionRangeSlider");
 let topPrograms;
-let positron;
-let positronLabels;
-// layers to toggle between
+
+// markers to turn on and off
 var overlays= {
 	"Program Locations" : markers
 };
-//var baseLayers= {
-	// add layer for each different choropleth variable, making sure they can't layer on top of each other
-	//"Basemap": positron,
-	//"Labels" : positronLabels
-//};
 
 let map_variables = [
 	{
@@ -67,8 +69,31 @@ $( document ).ready(function() {
     createMap(lat,lon,zl);
 	getGeoJSON();
     readCSV(path1);
-	createSlider()
+	createSlider();
 });
+
+
+// create the map
+function createMap(lat,lon,zl){
+	map = L.map('map').setView([lat,lon], zl);
+
+	let positron= L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+		subdomains: 'abcd',
+		maxZoom: 19
+	}).addTo(map)	
+
+	// put labels on top of geoJSON map
+	map.createPane('labels').style.zIndex = 650;
+	//make sure those labels don't capture clicks and touches
+	map.getPane('labels').style.pointerEvents = 'none';
+		
+	let positronLabels = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
+			// attribution: cartodbAttribution,
+		pane: 'labels'
+	}).addTo(map);
+}
+
 
 // function to read csv data
 function readCSV(path1){
@@ -80,12 +105,9 @@ function readCSV(path1){
 			csvdata = data
 			// map the data
 			mapCSV(data);
-
-			 
 		}
 	});
 }
-
 
 
 function mapCSV(csvdata){
@@ -105,7 +127,22 @@ function mapCSV(csvdata){
 		// create a marker
 		var marker = L.circleMarker([item.latitude,item.longitude], circleOptions)
 			.bindPopup(`<b><p align= "center">${item.name1}</b>
-			<br>${item.street1},<br>${item.city} ${item.zip}<br>${item.website}</p>`);
+			<br>${item.street1},
+			<br>${item.city} ${item.zip}
+			<br>${item.website}<br>
+			<br><b>Forms of payment accepted:</b><br>
+			${item.mc == "1" ? ("Medicare"): 
+			(stop = "")}<br>
+			${item.md == "1" ? ("Medicaid"): 
+			(stop = "")}<br>
+			${item.mi == "1" ? ("Military insurance"): 
+			(stop = "")}<br>
+			${item.pi == "1" ? ("Private health insurance"): 
+			(stop = "")}<br>
+			${item.sf == "1" ? ("Cash or self-payment"): 
+			(stop = "")}<br>
+			</p>`
+			);
 
 		let isClicked= false	
 		
@@ -147,9 +184,13 @@ function panToImage(index){
 }
 
 
-
 // function to get the geojson data
 function getGeoJSON(){
+
+	//why putting this twice?
+	if(geojson_layer){
+		geojson_layer.clearLayers()
+	}
 
 	$.getJSON(geojsonPath,function(data){
 		console.log(data)
@@ -157,61 +198,37 @@ function getGeoJSON(){
 		// put the data in a global variable
 		geojson_data = data;
 
-		// call the map function
-		mapGeoJSON('programs', 8, 'PuBuGn', 'equal_interval') //add a field to be used
-	
+		/*call the map function
+		mapGeoJSON('programs', 8, 'PuBuGn', 'equal_interval') //add fields*/
+
+		// create the layer and add to map. why twice?
+		geojson_layer = L.geoJson(geojson_data, {
+			stroke: true,
+			color: 'lightgray',
+			weight: 0.8,
+			fill: true,
+			//fillColor: brew.getColorInRange(feature.properties[field]),
+			fillOpacity: 0.5
+		}).addTo(map)
+
+		// create sidebar
+		createSidebar();
+
 		//call create slider function
 		createSlider();	
-
-		createSidebar();
 	})
-}
-
-function createSlider(){
-	$(".js-range-slider").ionRangeSlider({
-		type: "single",
-		min: 0,
-		max: 8,
-		from: 0, 
-		grid: true,
-		keyboard: true,
-
-		onStart: function (data){
-			console.log(data.input);
-			console.log(data.slider);
-		
-		},
-
-		onChange: function (data){
-	
-			console.log(data.from);
-			
-			mapPrograms(data.from)
-		}
-	});
-
-}
-
-function mapPrograms(num){
-	console.log('mapping zip codes with '+num ,'or more programs') //usiing "num" from the data in the slider
-	// clearing layers so they don't build on top of one another with each change of the slider
-	if(topPrograms){
-		topPrograms.clearLayers()
-	}
-	// filtering and styling layer of number of programs
-	topPrograms= L.geoJSON(geojson_data, {
-		style: {
-			color: '#ed5565',
-			weight: 2,
-			fill: false
-		},
-		filter:function(item){if(item.properties.programs>=num)return true}
-	}).addTo(map)
 }
 
 
 // function to map a geojson file and style it with choropleth
-function mapGeoJSON(field, num_class, color, scheme){
+function mapGeoJSON(args){
+
+	// populate args
+	args = args || {};
+	field = args.field || field;
+	num_classes = args.num_classes || num_classes;
+	palette = args.color || brew.getColorInRange();
+	scheme = args.scheme || scheme;
 
 	// clear layers in case it has been mapped already
 	if (geojson_layer){
@@ -253,6 +270,18 @@ function mapGeoJSON(field, num_class, color, scheme){
 	createInfoPanel();
 }
 
+// style each feature
+function getStyle(feature){
+	return {
+		stroke: .005,
+		color: '#cbcbcb',
+		weight: 1,
+		fill: true,
+		fillColor: brew.getColorInRange(feature.properties[fieldtomap]),
+		fillOpacity: 1
+	}
+}
+
 // Function that defines what will happen on user interactions with each feature
 function onEachFeature(feature, layer) {
 	layer.on({
@@ -261,6 +290,7 @@ function onEachFeature(feature, layer) {
 		click: zoomToFeature
 	});
 }
+
 // on mouse over, highlight the feature
 function highlightFeature(e) {
 	var layer = e.target;
@@ -290,11 +320,33 @@ function zoomToFeature(e) {
 	map.fitBounds(e.target.getBounds());
 }
 
+// populate side bar with dropdowns
+function createSidebar(){
+	$('.sidebar').html('')
+	// layers
+	$('.sidebar').append(`<p class="sidebar-title">Layers:</p><div id="dropdown-layers"></div>`)
+
+	$('#dropdown-layers').selectivity({
+		allowClear: true,
+		items: [{
+			text: 'ACS 2019 5-year Estimates',
+			children: map_variables,
+		}],
+		placeholder: 'Select a theme to map',
+		showSearchInputInDropdown: false
+	}).on("change",function(data){
+		console.log(data.value)
+		mapGeoJSON({field:data.value})
+	});
+}
+
 function createInfoPanel(){
-	
 
+	if(properties){
+		createDashboard(properties)
+	}
 
-	info_panel.onAdd = function (map) {
+	/*info_panel.onAdd = function (map) {
 		this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
 		this.update();
 		return this._div;
@@ -319,19 +371,7 @@ function createInfoPanel(){
 		}
 	};
 
-	info_panel.addTo(map);
-}
-
-// style each feature
-function getStyle(feature){
-	return {
-		stroke: .005,
-		color: '#cbcbcb',
-		weight: 1,
-		fill: true,
-		fillColor: brew.getColorInRange(feature.properties[fieldtomap]),
-		fillOpacity: 1
-	}
+	info_panel.addTo(map);*/
 }
 
 // add legend
@@ -342,9 +382,7 @@ function createLegend(){
 		labels = [],
 		from, to;
 		let title = map_variables.find( ({ id }) => id === field)
-		div.innerHTML = `<h4>${title.text}</h4>`
-		// div.innerHTML += `<h4>${field}</h4>`
-
+		div.innerHTML = `<h4>${field}</h4>`
 		
 		for (var i = 0; i < breaks.length; i++) {
 			from = breaks[i];
@@ -426,62 +464,47 @@ function createDashboard(properties){
 	chart.render()
 }
 
-function createSidebar(){
+// create the slider
+function createSlider(){
+	$(".js-range-slider").ionRangeSlider({
+		type: "single",
+		min: 0,
+		max: 8,
+		from: 0, 
+		grid: true,
+		keyboard: true,
 
-	$('.sidebar').html('')
-	// layers
-	$('.sidebar').append(`<p class="sidebar-title">Layers:</p><div id="dropdown-layers"></div>`)
-
-	$('#dropdown-layers').selectivity({
-		allowClear: true,
-		items: [{
-			// id: '+00:00',
-			text: 'ACS 2019 5-year Estimates',
-			children: map_variables,
-		}],
-		placeholder: 'Select a theme to map',
-		showSearchInputInDropdown: false
-	}).on("change",function(data){
-		console.log(data.value)
-		mapGeoJSON({field:data.value})
-	});
-}
-
-
-// create the map
-function createMap(lat,lon,zl){
-	map = L.map('map').setView([lat,lon], zl);
-
-	var positron= L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-		subdomains: 'abcd',
-		maxZoom: 19
-	}).addTo(map)	
-
-	
-
-	//L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
-		//attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-		//subdomains: 'abcd',
-		//maxZoom: 19
-	//}).addTo(map)
-	
-	//var Stamen_TonerLabels = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-labels/{z}/{x}/{y}{r}.{ext}', {
-		//attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>',
-		//subdomains: 'abcd',
-		//minZoom: 0,
-		//maxZoom: 20,
-		//ext: 'png'
-	//}).addTo(map)	
-
-	// put labels on top of geoJSON map
-	map.createPane('labels').style.zIndex = 650;
-	//make sure those labels don't capture clicks and touches
-	map.getPane('labels').style.pointerEvents = 'none';
+		onStart: function (data){
+			console.log(data.input);
+			console.log(data.slider);
 		
-	let positronLabels = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png', {
-			// attribution: cartodbAttribution,
-		pane: 'labels'
-	}).addTo(map);
+		},
+
+		onChange: function (data){
+	
+			console.log(data.from);
+			
+			mapPrograms(data.from)
+		}
+	});
 
 }
+
+//map data in the slider
+function mapPrograms(num){
+	console.log('mapping zip codes with '+num ,'or more programs') //usiing "num" from the data in the slider
+	// clearing layers so they don't build on top of one another with each change of the slider
+	if(topPrograms){
+		topPrograms.clearLayers()
+	}
+	// filtering and styling layer of number of programs
+	topPrograms= L.geoJSON(geojson_data, {
+		style: {
+			color: '#ed5565',
+			weight: 2,
+			fill: false
+		},
+		filter:function(item){if(item.properties.programs>=num)return true}
+	}).addTo(map)
+}
+
