@@ -161,6 +161,7 @@ function getGeoJSON(){
 	
 		//call create slider function
 		createSlider();	
+
 	})
 }
 
@@ -288,8 +289,6 @@ function zoomToFeature(e) {
 }
 
 function createInfoPanel(){
-	
-
 
 	info_panel.onAdd = function (map) {
 		this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
@@ -312,7 +311,7 @@ function createInfoPanel(){
 		// if feature is not highlighted
 		else
 		{
-			this._div.innerHTML = 'Discover the mental health services <br> by zip code by hovering over the <br> map.';
+			this._div.innerHTML = 'Hover over the map';
 		}
 	};
 

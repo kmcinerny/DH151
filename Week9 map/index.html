@@ -45,8 +45,15 @@
 	
 	<div class="content">
 		<div id="map"></div>
-		<div id="slider-container"></div>
-			<input type="text" class="js-range-slider" name="mapSlider" value="" />
+		<input type="text" class="js-range-slider" name="mapSlider" value="" />
+	</div>
+
+	<div class="slider-container">
+		<br>
+		<br>
+		<br>
+		<br>
+		<center>Slide for minimum number of facilities in each zip code</center>
 	</div>
 
 	<div class="dashboard">
@@ -54,12 +61,13 @@
 	</div>
 
 	<div class="footer">
-		<div class="button" onclick="mapGeoJSON('programs', 8, 'PuBuGn', 'equal_interval')"> Number of Facilities</div>
-		<div class="button" onclick="mapGeoJSON('pctblack', 8, 'PuBuGn', 'equal_interval')"> Percent Black</div>
-		<div class="button" onclick="mapGeoJSON('pctnative', 8, 'PuBuGn', 'equal_interval')"> Percent Indigenous</div>
-		<div class="button" onclick="mapGeoJSON('pctlatinx', 8, 'PuBuGn', 'equal_interval')"> Percent Latinx</div>
-		<div class="button" onclick="mapGeoJSON('pctasian', 8, 'PuBuGn', 'equal_interval')"> Percent Asian</div>
-		<div class="button" onclick="mapGeoJSON('pctwhite', 8, 'PuBuGn', 'equal_interval')"> Percent White</div>
+		<center><b>Map variables by zip</b></center>
+		<div class="button" onclick="mapGeoJSON('programs', 8, 'PuBuGn', 'equal_interval')"><center>Number of Facilities</center> </div>
+		<div class="button" onclick="mapGeoJSON('pctblack', 8, 'PuBuGn', 'equal_interval')"> <center>Percent Black</center></div>
+		<div class="button" onclick="mapGeoJSON('pctlatinx', 8, 'PuBuGn', 'equal_interval')"> <center>Percent Latinx</center></div>
+		<div class="button" onclick="mapGeoJSON('pctasian', 8, 'PuBuGn', 'equal_interval')"> <center>Percent Asian</center></div>
+		<div class="button" onclick="mapGeoJSON('pctwhite', 8, 'PuBuGn', 'equal_interval')"> <center>Percent White</center></div>
+		<div class="button" onclick="mapGeoJSON('pctnative', 8, 'PuBuGn', 'equal_interval')"> <center>Percent Indigenous</center></div>
 	</div>
 	
 	<script src="js/map.js"></script>
