@@ -34,7 +34,7 @@ var overlays= {
 
 let map_variables = [
 	{
-		text: 'Number of facilities',
+		text: 'Number of Facilities',
 		id: 'programs',
 	},
 	{
@@ -227,7 +227,7 @@ function mapGeoJSON(args){
 	args = args || {};
 	field = args.field || field;
 	num_classes = args.num_classes || num_classes;
-	palette = args.color || brew.getColorInRange();
+	palette = args.color || color;
 	scheme = args.scheme || scheme;
 
 	// clear layers in case it has been mapped already
@@ -250,7 +250,7 @@ function mapGeoJSON(args){
 
 	// set up the "brew" options
 	brew.setSeries(values);
-	brew.setNumClasses(num_class);
+	brew.setNumClasses(num_classes);
 	brew.setColorCode(color);
 	brew.classify(scheme);
 
@@ -324,12 +324,12 @@ function zoomToFeature(e) {
 function createSidebar(){
 	$('.sidebar').html('')
 	// layers
-	$('.sidebar').append(`<p class="sidebar-title">Layers:</p><div id="dropdown-layers"></div>`)
+	$('.sidebar').append(`<p class="sidebar-title"><b>Map variables by Zip:</b></p><div id="dropdown-layers"></div>`)
 
 	$('#dropdown-layers').selectivity({
 		allowClear: true,
 		items: [{
-			text: 'ACS 2019 5-year Estimates',
+			text: 'Facilities & ACS 2019 5-year Estimates',
 			children: map_variables,
 		}],
 		placeholder: 'Select a theme to map',
@@ -342,11 +342,7 @@ function createSidebar(){
 
 function createInfoPanel(){
 
-	if(properties){
-		createDashboard(properties)
-	}
-
-	/*info_panel.onAdd = function (map) {
+	info_panel.onAdd = function (map) {
 		this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
 		this.update();
 		return this._div;
@@ -371,7 +367,7 @@ function createInfoPanel(){
 		}
 	};
 
-	info_panel.addTo(map);*/
+	info_panel.addTo(map);
 }
 
 // add legend
