@@ -2,6 +2,7 @@ body,html {
 	margin:0;
 	height:100%;
 	width:100%;
+	font-family: Arial, Helvetica, sans-serif
 }
 
 #map {
@@ -35,14 +36,16 @@ body {
 	grid-area: content;
 }
 
-.sidebar {
+.footer {
 	grid-area: footer;
 	padding:10px;
 	background-color: white;
+	font-size: 14px;
 }
 
 .slider-container {
 	background-color: #333333;
+	color:white;
 }
 
 /* legend styles */
@@ -73,3 +76,19 @@ body {
 	opacity: 0.7;
 }
 
+.button {
+	background-color: #333333;
+    color: #f2f2f2;
+    float:none;
+    padding: 5px 10px;
+    margin-right: 5px;
+    font-size: 12px;
+    border-radius: 20px;
+    border:white;
+    cursor: pointer;
+}
+
+.button:hover{
+    background:#7c7b7b;
+    color:#fff;
+  }
