@@ -378,7 +378,7 @@ function createLegend(){
 		labels = [],
 		from, to;
 		let title = map_variables.find( ({ id }) => id === field)
-		div.innerHTML = `<h4>${field}</h4>`
+		div.innerHTML = `<h4>${title.text}</h4>`
 		
 		for (var i = 0; i < breaks.length; i++) {
 			from = breaks[i];
