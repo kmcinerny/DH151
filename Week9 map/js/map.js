@@ -28,6 +28,37 @@ var overlays= {
 	//"Basemap": positron,
 	//"Labels" : positronLabels
 //};
+
+let map_variables = [
+	{
+		text: 'Number of facilities',
+		id: 'programs',
+	},
+	{
+		text: 'Percent Black',
+		id: 'pctblack',
+	},
+	{
+		text: 'Percent Latinx',
+		id: 'pctlatinx',
+	},
+	{
+		text: 'Percent Asian',
+		id: 'pctasian',
+	},
+	{
+		text: 'Percent White',
+		id: 'pctwhite',
+	},
+	{
+		text: 'Percent Native American',
+		id: 'pctnative',
+	},
+	{
+		text: 'Percent Pacific Islander',
+		id: 'pctislander',
+	},
+]
 	
 
 // initialize
@@ -218,6 +249,7 @@ function mapGeoJSON(field, num_class, color, scheme){
 	//create info panel
 	createInfoPanel();
 }
+
 // Function that defines what will happen on user interactions with each feature
 function onEachFeature(feature, layer) {
 	layer.on({
@@ -238,8 +270,9 @@ function highlightFeature(e) {
 		fillOpacity: .9
 	});
 	
-	info_panel.update(layer.feature.properties)
+	info_panel.update(layer.feature.properties);
 
+	createDashboard(layer.feature.properties)
 }
 
 // on mouse out, reset the style, otherwise, it will remain highlighted
@@ -322,6 +355,70 @@ function createLegend(){
 		
 		legend.addTo(map);
 }
+
+function createDashboard(properties){
+
+	// clear dashboard
+	$('.dashboard').empty();
+
+	//output in console to make sure it's working
+	console.log(properties)
+
+	// chart title
+	let title = 'Zip Code ' + properties.zipcode;
+
+	// data values
+	let data = [
+		properties.pctblack,
+		properties.pctlatinx,
+		properties.pctasian,
+		properties.pctwhite,
+		properties.pctnative,
+		properties.pctislander,
+	];
+
+	// data fields
+	let fields = [
+		'% Black',
+		'% Latinx',
+		'% Asian',
+		'% White',
+		'% Natve American',
+		'% Pacific Islander',
+	];
+
+	// set chart options
+	let options = {
+		chart: {
+			type: 'bar',
+			height: 300,
+			animations: {
+				enabled: false,
+			}
+		},
+		title: {
+			text: title,
+		},
+		plotOptions: {
+			bar: {
+				horizontal: true
+			}
+		},
+		series: [
+			{
+				data: data
+			}
+		],
+		xaxis: {
+			categories: fields
+		}
+	}
+	
+	// create the chart
+	let chart = new ApexCharts(document.querySelector('.dashboard'), options)
+	chart.render()
+}
+
 
 // create the map
 function createMap(lat,lon,zl){
