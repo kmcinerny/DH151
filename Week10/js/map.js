@@ -13,7 +13,7 @@ let geojson_data= L.tileLayer;
 let geojson_layer;
 
 // map args
-let field= 'total_pop'; //is this the default field?
+let field; //is this the default field?
 let num_classes= 8;
 let color= 'PuBuGn';
 let scheme= 'equal_interval';
@@ -160,6 +160,8 @@ function mapCSV(csvdata){
 			click: function(){
 				isClicked= true
 				this.openPopup();
+				//add another call to open the dashboard
+				createProgramDashboard(item);
 			}
 		})	
 	
@@ -378,7 +380,9 @@ function createLegend(){
 		labels = [],
 		from, to;
 		let title = map_variables.find( ({ id }) => id === field)
-		div.innerHTML = `<h4>${title.text}</h4>`
+		console.log('field is'+ field)
+		console.log(title.text)
+		div.innerHTML += `<h4>${title.text}</h4>`
 		
 		for (var i = 0; i < breaks.length; i++) {
 			from = breaks[i];
@@ -390,11 +394,18 @@ function createLegend(){
 				}
 			}
 			
-			div.innerHTML = labels.join('<br>');
+			div.innerHTML += labels.join('<br>');
 			return div;
 		};
 		
 		legend.addTo(map);
+}
+
+function createProgramDashboard(item){
+	// clear dashboard
+	$('.dashboard').empty();
+
+	console.log(item)
 }
 
 function createDashboard(properties){
