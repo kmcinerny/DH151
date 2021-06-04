@@ -403,7 +403,11 @@ function createLegend(){
 
 function createProgramDashboard(item){
 	// clear dashboard
-	$('.dashboard').empty();
+	$('.dashboard').html(`
+	<div style="text-align:center">
+		<h2>${item.name1}</h2>
+	</div>
+	`);
 
 	console.log(item)
 }
@@ -419,7 +423,7 @@ function createDashboard(properties){
 		<div style="font-size:3em;">${properties.programs}</div>
 		<p>facilities</p>
 	</div>
-	<table width="100%"><tr><td width="33%" id="dashboard1"></td><td width="33%" id="dashboard2"></td></tr></table>
+	<table width="100%"><tr><td width="33%" class="dashboard1"></td><td width="33%" class="dashboard2"></td></tr></table>
 	`);
 
 	//output in console to make sure it's working
@@ -429,7 +433,7 @@ function createDashboard(properties){
 	let title = 'Zip Code ' + properties.zipcode;
 
 	// data values
-	let data = [
+	var data = [
 		properties.pctblack,
 		properties.pctlatinx,
 		properties.pctasian,
@@ -439,7 +443,7 @@ function createDashboard(properties){
 	];
 
 	// data fields
-	let fields = [
+	var fields = [
 		'% Black',
 		'% Latinx',
 		'% Asian',
@@ -468,6 +472,16 @@ function createDashboard(properties){
 		
 	};
 	
+	//data values
+	var data = [
+		properties.programs,
+	];
+
+	// data fields
+	var fields = [
+		'# Facilities',
+	];
+
 	// create the chart
 	var chart = new ApexCharts(document.querySelector('.dashboard1'), options)
 	chart.render()
@@ -487,7 +501,7 @@ function createDashboard(properties){
 				horizontal: true
 			}
 		},
-		series: [properties.programs],
+		series: data,
 		xaxis: {
 			categories: fields
 		}
