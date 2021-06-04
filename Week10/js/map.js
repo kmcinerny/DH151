@@ -472,6 +472,7 @@ function createDashboard(properties){
 		
 	};
 	
+	//Bar chart 
 	//data values
 	var data = [
 		properties.programs,
@@ -495,13 +496,17 @@ function createDashboard(properties){
 				enabled: false,
 			}
 		},
-		title: 'Number of programs',
+		title: 'Facilities',
 		plotOptions: {
 			bar: {
 				horizontal: true
 			}
 		},
-		series: data,
+		series: [
+			{
+				data: data
+			}
+		],
 		xaxis: {
 			categories: fields
 		}
