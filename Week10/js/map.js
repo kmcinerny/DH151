@@ -410,13 +410,22 @@ function createProgramDashboard(item){
 
 function createDashboard(properties){
 
+
 	// clear dashboard
-	$('.dashboard').empty();
+	$('.dashboard').html(`
+	<div style="text-align:center">
+		<h2>${properties.zipcode}</h2>
+		<h4>Zip Profile</h4>
+		<div style="font-size:3em;">${properties.programs}</div>
+		<p>facilities</p>
+	</div>
+	<table width="100%"><tr><td width="33%" id="dashboard1"></td><td width="33%" id="dashboard2"></td></tr></table>
+	`);
 
 	//output in console to make sure it's working
 	console.log(properties)
 
-	// chart title
+	//chart title
 	let title = 'Zip Code ' + properties.zipcode;
 
 	// data values
@@ -440,7 +449,31 @@ function createDashboard(properties){
 	];
 
 	// set chart options
-	let options = {
+	var options = {
+		chart: {
+			type: 'pie',
+			height: 400,
+			width: 400,
+			animations: {
+				enabled: false,
+			}
+		},
+		series: data,
+		labels: fields,
+		legend: {
+			position: 'right',
+			offsetY: 0,
+			height: 230,
+		}
+		
+	};
+	
+	// create the chart
+	var chart = new ApexCharts(document.querySelector('.dashboard1'), options)
+	chart.render()
+
+	// set chart options
+	var options = {
 		chart: {
 			type: 'bar',
 			height: 300,
@@ -448,26 +481,21 @@ function createDashboard(properties){
 				enabled: false,
 			}
 		},
-		title: {
-			text: title,
-		},
+		title: 'Number of programs',
 		plotOptions: {
 			bar: {
 				horizontal: true
 			}
 		},
-		series: [
-			{
-				data: data
-			}
-		],
+		series: [properties.programs],
 		xaxis: {
 			categories: fields
 		}
-	}
+		
+	};
 	
 	// create the chart
-	let chart = new ApexCharts(document.querySelector('.dashboard'), options)
+	var chart = new ApexCharts(document.querySelector('.dashboard2'), options)
 	chart.render()
 }
 
