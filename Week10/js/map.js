@@ -8,7 +8,7 @@ let path1 = "data/mental.csv";
 let path = '';
 let csvdata;
 let markers = L.featureGroup();
-let geojsonPath= 'data/zipsinfo.geo.json';
+let geojsonPath= 'data/zipsinfo2.geo.json';
 let geojson_data= L.tileLayer;
 let geojson_layer;
 
@@ -129,19 +129,7 @@ function mapCSV(csvdata){
 			.bindPopup(`<b><p align= "center">${item.name1}</b>
 			<br>${item.street1},
 			<br>${item.city} ${item.zip}
-			<br>${item.website}<br>
-			<br><b>Forms of payment accepted:</b><br>
-			${item.mc == "1" ? ("Medicare"): 
-			(stop = "")}<br>
-			${item.md == "1" ? ("Medicaid"): 
-			(stop = "")}<br>
-			${item.mi == "1" ? ("Military insurance"): 
-			(stop = "")}<br>
-			${item.pi == "1" ? ("Private health insurance"): 
-			(stop = "")}<br>
-			${item.sf == "1" ? ("Cash or self-payment"): 
-			(stop = "")}<br>
-			</p>`
+			<br>${item.website}<br>`
 			);
 
 		let isClicked= false	
@@ -407,7 +395,22 @@ function createProgramDashboard(item){
 	<div style="text-align:center">
 		<h2>${item.name1}</h2>
 	</div>
-	`);
+	<br>${item.street1},
+	<br>${item.city} ${item.zip}
+	<br>${item.website}<br>
+	<br><b>Forms of payment accepted:</b><br>
+	${item.mc == "1" ? ("Medicare"): 
+	(stop = "")}<br>
+	${item.md == "1" ? ("Medicaid"): 
+	(stop = "")}<br>
+	${item.mi == "1" ? ("Military insurance"): 
+	(stop = "")}<br>
+	${item.pi == "1" ? ("Private health insurance"): 
+	(stop = "")}<br>
+	${item.sf == "1" ? ("Cash or self-payment"): 
+	(stop = "")}<br>
+	</p>`
+	);
 
 	console.log(item)
 }
@@ -475,7 +478,7 @@ function createDashboard(properties){
 	//Bar chart 
 	//data values
 	var data = [
-		properties.programs,
+		properties.med_hhinc,
 	];
 
 	// data fields
