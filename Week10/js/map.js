@@ -487,16 +487,16 @@ function createDashboard(properties){
 	var chart = new ApexCharts(document.querySelector('.dashboard1'), options)
 	chart.render()
 
-	// set chart options
+	// bar chart
 	var options = {
 		chart: {
 			type: 'bar',
 			height: 300,
+			title: 'Facilities',
 			animations: {
 				enabled: false,
 			}
 		},
-		title: 'Facilities',
 		plotOptions: {
 			bar: {
 				horizontal: true
