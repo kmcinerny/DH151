@@ -13,7 +13,7 @@ let geojson_data= L.tileLayer;
 let geojson_layer;
 
 // map args
-let field; //is this the default field?
+let field;
 let num_classes= 8;
 let color= 'PuBuGn';
 let scheme= 'equal_interval';
@@ -439,9 +439,9 @@ function createDashboard(properties){
 		<p>facilities</p>
 	</div>
 	<table width="100%"><tr><td width="33%" class="dashboard1"></td></tr></table>
-	<p>Median Household Income: ${properties.med_hhinc}</p>
-	<p>Percent of People Below the Poverty Line: ${properties.pct_inpoverty}</p>
-	<p>Percent of People Who Are Uninsured: ${properties.pct_noins}</p>
+	<p>Median Household Income: <b> $${properties.med_hhinc}</b></p>
+	<p>Percent of People Below the Poverty Line: <b> ${properties.pct_inpoverty}%</b></p>
+	<p>Percent of People Who Are Uninsured: <b>${properties.pct_noins}%</b></p>
 	`);
 
 	//output in console to make sure it's working
